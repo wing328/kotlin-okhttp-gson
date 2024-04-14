@@ -1,0 +1,196 @@
+openapi: 3.0.0
+info:
+  description: "This spec is mainly for testing Petstore server and contains fake\
+    \ endpoints,"
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: OpenAPI Petstore
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /foo:
+    get:
+      responses:
+        default:
+          description: response
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    fruit:
+      additionalProperties: false
+      oneOf:
+      - $ref: '#/components/schemas/apple'
+      - $ref: '#/components/schemas/banana'
+      properties:
+        color:
+          type: string
+    apple:
+      nullable: true
+      properties:
+        cultivar:
+          pattern: "^[a-zA-Z\\s]*$"
+          type: string
+        origin:
+          pattern: "/^[A-Z\\s]*$/i"
+          type: string
+      type: object
+    banana:
+      properties:
+        lengthCm:
+          type: number
+      type: object
+    mammal:
+      discriminator:
+        propertyName: className
+      oneOf:
+      - $ref: '#/components/schemas/whale'
+      - $ref: '#/components/schemas/zebra'
+      - $ref: '#/components/schemas/Pig'
+    whale:
+      properties:
+        hasBaleen:
+          type: boolean
+        hasTeeth:
+          type: boolean
+        className:
+          type: string
+      required:
+      - className
+      type: object
+    zebra:
+      additionalProperties: true
+      properties:
+        type:
+          enum:
+          - plains
+          - mountain
+          - grevys
+          type: string
+        className:
+          type: string
+      required:
+      - className
+      type: object
+    Pig:
+      discriminator:
+        propertyName: className
+      oneOf:
+      - $ref: '#/components/schemas/BasquePig'
+      - $ref: '#/components/schemas/DanishPig'
+    BasquePig:
+      properties:
+        className:
+          type: string
+      required:
+      - className
+      type: object
+    DanishPig:
+      properties:
+        className:
+          type: string
+      required:
+      - className
+      type: object
+    gmFruit:
+      additionalProperties: false
+      anyOf:
+      - $ref: '#/components/schemas/apple'
+      - $ref: '#/components/schemas/banana'
+      properties:
+        color:
+          type: string
+    fruitReq:
+      additionalProperties: false
+      nullable: true
+      oneOf:
+      - $ref: '#/components/schemas/appleReq'
+      - $ref: '#/components/schemas/bananaReq'
+    appleReq:
+      additionalProperties: false
+      properties:
+        cultivar:
+          type: string
+        mealy:
+          type: boolean
+      required:
+      - cultivar
+      type: object
+    bananaReq:
+      additionalProperties: false
+      properties:
+        lengthCm:
+          type: number
+        sweet:
+          type: boolean
+      required:
+      - lengthCm
+      type: object
+    Tag:
+      description: A tag for a pet
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+      title: Pet Tag
+      type: object
+      xml:
+        name: Tag
+    Pet:
+      description: A pet for sale in the pet store
+      properties:
+        id:
+          format: int64
+          type: integer
+        category:
+          $ref: '#/components/schemas/Category'
+        name:
+          example: doggie
+          type: string
+        photoUrls:
+          items:
+            type: string
+          type: array
+          xml:
+            name: photoUrl
+            wrapped: true
+        tags:
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          xml:
+            name: tag
+            wrapped: true
+        status:
+          deprecated: true
+          description: pet status in the store
+          enum:
+          - available
+          - pending
+          - sold
+          type: string
+      required:
+      - name
+      - photoUrls
+      title: a Pet
+      type: object
+      xml:
+        name: Pet
+    Category:
+      description: A category for a pet
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          pattern: "^[a-zA-Z0-9]+[a-zA-Z0-9\\.\\-_]*[a-zA-Z0-9]+$"
+          type: string
+      title: Pet category
+      type: object
+      xml:
+        name: Category
+
